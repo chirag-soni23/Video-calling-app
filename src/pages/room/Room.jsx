@@ -1,12 +1,17 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
-
 
 export default function Room() {
     const { roomId } = useParams();
+    const elementRef = useRef(null);
 
-    // myMeeting Function
+    useEffect(() => {
+        if (roomId) {
+            myMeeting(elementRef.current);
+        }
+    }, [roomId]);
+
     const myMeeting = async (element) => {
         const appID = 781120951;
         const serverSecret = "94b578d2ec976cd655d65dbab07727d7";
@@ -23,18 +28,18 @@ export default function Room() {
             container: element,
             sharedLinks: [{
                 name: 'Copy Link',
-                url: `https://video-calling-app-ten.vercel.app/room/${roomId}`
+                url: `${window.location.origin}/room/${roomId}`
             }],
             scenario: {
                 mode: ZegoUIKitPrebuilt.OneONoneCall
             },
             showScreenSharingButton: true
-        })
+        });
+    };
 
-    }
     return (
         <div>
-            <div ref={myMeeting} />
+            <div ref={elementRef} />
         </div>
-    )
+    );
 }
